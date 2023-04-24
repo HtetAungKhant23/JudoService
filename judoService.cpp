@@ -7,20 +7,17 @@ class Judo{
 public:
     string trainer_name[5]={"Trainer A","Trainer B","Trainer C","Trainer D","Trainer E"};
     string trainingPlanName[5], athleteName[USERSIZE], plan[USERSIZE], competitionWeight[USERSIZE];
-    float trainingPlanPrice[5], currentWeight[USERSIZE];
-    int userID[USERSIZE], numberOfCompetition[USERSIZE], privateCoachingHours[USERSIZE], total_fees[USERSIZE];
+    float trainingPlanPrice[5], currentWeight[USERSIZE], total_fees[USERSIZE], numberOfCompetition[USERSIZE];
+    int userID[USERSIZE], privateCoachingHours[USERSIZE];
     int totalUser = 0;
     int index[USERSIZE];
-
     int weight_list[6]={100,100,90,81,73,66};
-    string comWeightCat[6] = {"Heavy weight", "Light Heavy weight", "Middle weight", "Light middle weight", "Light weight", "Fly weight"};
-
+    string comWeightCat[6] = {"Heavy weight","Light Heavy weight","Middle weight","Light middle weight","Light weight","Fly weight"};
     void mainMenu();
     void trainingPlan();
 
     Judo(){
         trainingPlan();
-        mainMenu();
     }
 
     void adminMenu();
@@ -33,8 +30,6 @@ public:
     int findIdx(string opt);
     int inputValidation(string opt);
 
-
-// **** user part ****
     void userMenu();
     void registration();
     void view_trainer_and_price();
@@ -45,7 +40,6 @@ public:
     float priceOutput(int plan);
     int choicePlan();
     int choiceWeightCat();
-
 };
 
 void Judo::trainingPlan() {
@@ -67,6 +61,7 @@ void Judo::trainingPlan() {
 
 void Judo::mainMenu() {
     string option;
+    flag1:
     cout << "1. Admin " << endl;
     cout << "2. User " << endl;
     cout << "3. Exit from program : ";
@@ -75,7 +70,7 @@ void Judo::mainMenu() {
         cout << "\n*** welcome from admin menu ***\n"<<endl;
         adminMenu();
     } else if (option == "2"){
-        cout << "\n*** welcome from user menu***\n"<<endl;
+        cout << "\n*** welcome from user menu***"<<endl;
         userMenu();
     } else if (option == "3"){
         cout << " \n Completely exit from program \n";
@@ -83,17 +78,14 @@ void Judo::mainMenu() {
     } else {
         cout << " Invalid option!!! Please choose carefully!!!" << endl;
         cout << "*******************\n" << endl;
-        mainMenu();
+        goto flag1;
     }
 }
-
-
-
 
 void Judo::userMenu() {
     string user_op;
     flag1:
-    cout<<"\n\nEnter option \n1-View Trainer and trainner price\n2-View trinning plan\n3-Registration\n4-Exit : ";
+    cout<<"\nEnter option \n1-View Trainer and trainner price\n2-View trinning plan\n3-Registration\n4-Exit : ";
     cin>>user_op;
     int check = inputValidation(user_op);
     if(check == 1){
@@ -101,19 +93,19 @@ void Judo::userMenu() {
         switch (op) {
             case 1:
                 view_trainer_and_price();
-                userMenu();
-                break;
+                goto flag1;
             case 2:
                 view_training_plan(0);
-                userMenu();
-                break;
+                goto flag1;
             case 3:
                 registration();
-                userMenu();
-                break;
+                goto flag1;
             case 4:
                 cout << "\n";
                 mainMenu();
+            default:
+                cout << "Invalid\n";
+                break;
         }
     }else{
         cout<<"Invalid input\n";
@@ -137,12 +129,12 @@ void Judo::view_training_plan(int flag) {
             if(i==2){
                 k = 5;
             }
-            cout << i+1 << ". " << trainingPlanName[i] << "(" << k << " sessions per week)" << "-weekly fee => $" << trainingPlanPrice[i] << endl;
+            cout << i+1 << ". " << trainingPlanName[i] << "(" << k << " sessions per week)" << "-weekly fee => " << fixed << setprecision(2) << trainingPlanPrice[i] << "$" << endl;
             k++;
         }else if (i==3 && flag != 1){
-            cout << i+1 << ". " << trainingPlanName[i] << "-per hour => $" << trainingPlanPrice[i] << endl;
+            cout << i+1 << ". " << trainingPlanName[i] << "-per hour => " << fixed << setprecision(2) << trainingPlanPrice[i] << "$" << endl;
         } else if (i==4 && flag != 1){
-            cout << i+1 << ". " << trainingPlanName[i] << "-per competition => $" << trainingPlanPrice[i] << endl;
+            cout << i+1 << ". " << trainingPlanName[i] << "-per competition => " << fixed << setprecision(2) << trainingPlanPrice[i] << "$" << endl;
         }
     }
     cout << " *************************************" << endl;
@@ -192,15 +184,6 @@ int Judo::private_coach(){
     }
 }
 
-
-
-
-
-
-
-
-
-
 int Judo::choicePlan(){
     int ret = 0;
     view_training_plan(1);
@@ -217,14 +200,13 @@ int Judo::choiceWeightCat(){
     return ret_weight;
 }
 
-
 void Judo::registration() {
     int id = 0;
     int lev_option = 0;
     int numOfCompeti = 0;
     int priCoachHour = 0;
     int com_weight = 0;
-    int toFees = 0;
+//    int toFees = 0;
     string name;
     float curWeight;
     cout << "Enter your ID number :";
@@ -305,26 +287,26 @@ void Judo::userOutput(int lvl, int pHour, int resWeight) {
     cout << "| ________________________________________________________________________________" << endl;
     float fees = priceOutput(lvl);
     if(pHour != 0){
-        cout<<"\n| Private tution per hour                          => " << fixed << setprecision(2)<< pHour * trainingPlanPrice[3] << "$" << endl;
-        fees = fees + (pHour * trainingPlanPrice[3]);
+        cout<<"\n| Private tution per hour for month                    => " << fixed << setprecision(2)<< pHour * trainingPlanPrice[3] << "$" << endl;
+        fees = fees + (pHour * trainingPlanPrice[3] * 4);
     }
     total_fees[totalUser-1] = fees;
     cout << "\n| ###################################################################################";
     cout << "\n";
     cout<<"\n| The total cost of training and competitions for the month => "<< fixed << setprecision(2) << total_fees[totalUser-1] << "$" << endl;
-    
+
     if (lvl != 1) {
-        cout << "\nYour current weight        => " << currentWeight[totalUser - 1] << "kg" << endl;
-        if(resWeight == 1){
-            cout << "\nYour competition weight over  => " << weight_list[resWeight-1] << "kg" << endl;
+        cout << "\nYour current weight        => " << fixed << setprecision(2) << currentWeight[totalUser - 1] << "kg" << endl;
+        if(currentWeight[totalUser - 1] > 100){
+            cout << "\nYour competition weight over  => " << fixed << setprecision(2) << weight_list[resWeight-1] << "kg" << endl;
             cout << "\nYou weight can join competition automatically!!!" << endl;
         } else{
-            cout << "\nYour competition weight max limit   => " << weight_list[resWeight-1] << "kg" << endl;
+            cout << "\nYour competition weight max limit   => " << fixed << setprecision(2) << weight_list[resWeight-1] << "kg" << endl;
             float resultWeight = weight_list[resWeight-1] - currentWeight[totalUser - 1];
             if (resultWeight > 0){
-                cout << "\nYou need to weight gain => " << resultWeight << "kg" << endl;
+                cout << "\nYou need to weight gain => " << fixed << setprecision(2) << resultWeight << "kg" << endl;
             } else if (resultWeight < 0){
-                cout << "\nYou need to weight loss => " << resultWeight * (-1) << "kg" << endl;
+                cout << "\nYou need to weight loss => " << fixed << setprecision(2) << resultWeight * (-1) << "kg" << endl;
             } else {
                 cout << "\nYour weight is ready for competition" << endl;
             }
@@ -333,7 +315,6 @@ void Judo::userOutput(int lvl, int pHour, int resWeight) {
     }
     cout << "\n******************************************************************************" << endl ;
 }
-
 
 void Judo::adminMenu() {
     string adOption;
@@ -369,6 +350,7 @@ void Judo::adminMenu() {
     }
 }
 
+// bubble sort သုံးထားပါတယ်
 void Judo::sortingByID() {
     int copyID[5];
     int temp = 0;
@@ -400,24 +382,23 @@ void Judo::printInfo(int idx) {
     cout << "Athlete's ID   => " << userID[idx] << endl;
     cout << "Athlete's Name => " << athleteName[idx] << endl;
     cout << "Training Plan  => " << plan[idx] << endl;
-    cout << "Current Weight => " << currentWeight[idx] << "kg" << endl;
+    cout << "Current Weight => " << fixed << setprecision(2) << currentWeight[idx] << "kg" << endl;
     if (privateCoachingHours[idx] != 0) {
-        cout << "Private Coaching Hours => " << privateCoachingHours[idx] << "hrs" << endl;
+        cout << "Private Coaching Hours => " << privateCoachingHours[idx] * 4 << "hrs" << endl;
     }
     if(plan[idx] != trainingPlanName[0]){
         cout << "Number Of Competitions => " << numberOfCompetition[idx] << endl;
-        cout << "Competition Weight     => " << competitionWeight[idx] << "kg" << endl;
+        cout << "Competition Weight     => " << competitionWeight[idx] << endl;
     }
     cout << "\n****************************************** \n" << endl;
 }
 
+// linear search သုံးထားပါတယ်
 int Judo::findIdx(string opt) {
     int findID = stoi(opt);
     for (int i = 0; i < totalUser; ++i) {
-        for (int j = 0; j < totalUser; ++j) {
-            if(userID[index[i]] == findID){
-                return index[i];
-            }
+        if(userID[index[i]] == findID){
+            return index[i];
         }
     }
     return -1;
@@ -547,5 +528,6 @@ void Judo::viewAllUserInfo() {
 
 int main() {
     Judo obj;
+    obj.mainMenu();
     return 0;
 };
